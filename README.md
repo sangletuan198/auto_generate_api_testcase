@@ -31,7 +31,6 @@ Built to replace a fully manual QA documentation process across **40+ banking AP
                  │ parse_html_docs  │    │ generate_outputs   │
                  │ parse_docx       │──▶ │ regen_from_contracts│
                  │ pull_confluence  │    │ merge_all_collections│
-                 │ soapui_parser    │    │ enrich_contracts    │
                  └──────────────────┘    └────────┬───────────┘
                                                   │
                                     ┌─────────────▼──────────────┐
@@ -62,7 +61,7 @@ Built to replace a fully manual QA documentation process across **40+ banking AP
 | `merge_all_collections.py` | 330 | Merge per-API collections into master collection |
 | `refresh_prerequisites.py` | 205 | BFS-based dependency resolver for API prerequisite chains |
 
-**Total: 23 scripts · ~10,800 LOC**
+**Total: 15 scripts · ~10,400 LOC**
 
 ---
 

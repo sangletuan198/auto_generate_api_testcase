@@ -300,13 +300,13 @@ if __name__ == '__main__':
             <password>aBC123456@!</password>
             <userName>NGUYETDA</userName>
          </WebRequestCommon>
-         <MYAPPLISTRTLACCTType>
+         <APPLISTACCOUNTType>
             <enquiryInputCollection>
                <columnName>CUSTOMER</columnName>
                <criteriaValue>11811698</criteriaValue>
                <operand>EQ</operand>
             </enquiryInputCollection>
-         </MYAPPLISTRTLACCTType>
+         </APPLISTACCOUNTType>
       </sup:GetRetailAccountsofCustomer>
    </soapenv:Body>
 </soapenv:Envelope>'''

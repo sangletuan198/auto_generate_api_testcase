@@ -65,11 +65,11 @@ SOAP_OP_TO_SLUG: dict = _raw_url_overrides.get('_soap_op_overrides', {})
 
 # manual prerequisites per API slug
 # Keys are auto-normalised to camelCase so users can write either
-# "open-flex-saving" or "openFlexSaving" — both will match.
+# "create-resource" or "createResource" — both will match.
 _raw_manual_prereqs = _load_json(BASELINE / 'manual_prerequisites.json', {})
 MANUAL_PREREQUISITES: dict = {}
 def _kebab_to_camel(s: str) -> str:
-    """Inline normaliser: 'open-flex-saving' → 'openFlexSaving'."""
+    """Inline normaliser: 'create-resource' → 'createResource'."""
     s = s.strip('/ ').strip()
     parts = re.split(r'[-_]+', s)
     return parts[0] + ''.join(p.capitalize() for p in parts[1:])
@@ -152,7 +152,7 @@ def _cached_decode(path: Path) -> str:
 
 
 def _kebab_to_slug(s: str) -> str:
-    """Convert /get-saving-account-transactions → getSavingAccountTransactions."""
+    """Convert /get-account-transactions → getAccountTransactions."""
     s = s.strip('/ ').strip()
     parts = re.split(r'[-_]+', s)
     return parts[0] + ''.join(p.capitalize() for p in parts[1:])
@@ -202,7 +202,7 @@ def _discover_html_files() -> dict:
             result[stem] = html_path
             continue
         # 2.5. Filename contains _API_<endpoint-path> pattern
-        #      e.g. view-source_US-1.45.7.7.1_API_get-account-saving-statistic-monthly.html
+        #      e.g. view-source_US-1.45.7.7.1_API_get-account-statistic-monthly.html
         api_match = re.search(r'_API_([a-z0-9][a-z0-9\-]+)$', stem, re.IGNORECASE)
         if api_match:
             slug = _kebab_to_slug(api_match.group(1))
@@ -212,7 +212,7 @@ def _discover_html_files() -> dict:
                 print(f'⚠️  Slug collision "{slug}" for {fname}, skipping')
             continue
         # 2.6. Confluence URL filename with +API+<endpoint> pattern
-        #      e.g. ...title=US+1.45.7.6.3+API+get-saving-account-transactions.html
+        #      e.g. ...title=US+1.45.7.6.3+API+get-account-transactions.html
         api_plus_match = re.search(r'\+API\+([a-z0-9][a-z0-9\-]+)$', stem, re.IGNORECASE)
         if api_plus_match:
             slug = _kebab_to_slug(api_plus_match.group(1))
@@ -300,7 +300,7 @@ def _discover_html_files() -> dict:
                 # Register as HTML — main loop will parse via HTML path
                 result[slug] = html_path
         else:
-            print('⚠️  Có file .doc trong input/ nhưng không import được parse_docx.')
+            print('⚠️  Found .doc files in input/ but parse_docx could not be imported.')
             print('   Chạy: pip install python-docx')
             import platform
             os_name = platform.system()
@@ -720,7 +720,7 @@ def _extract_enums_from_lookup_table(header: list, data: list,
 
     # Collect unique non-empty values from code columns only
     # Filter: reject title-case English words (e.g. "Monthly", "Quarterly")
-    # Accept: ALL-CAPS (ANPHU), dotted codes (IB.DEPOSIT.AR), mixed (ANPHU.ML)
+    # Accept: ALL-CAPS (PRODUCT_CODE), dotted codes (PROD.TYPE.AR), mixed (PRODUCT_CODE.ML)
     def _is_code_value(v: str) -> bool:
         if not v or len(v) > 30:
             return False
@@ -816,7 +816,7 @@ def _extract_prose_enum_values(text: str) -> list:
     """Detect enum values from natural language descriptions.
 
     Patterns detected:
-      - "Có những type sau COMMITMENT RENEWAL SCHEDULE SETTLEMENT DEPOSITINT"
+      - "Có những type sau COMMITMENT RENEWAL SCHEDULE SETTLEMENT"
       - "There are N types: X, Y, Z"
       - "bao gồm X, Y, Z"
       - "Nếu X = A => ..., Nếu X = B => ..."  (conditional description)
@@ -836,7 +836,7 @@ def _extract_prose_enum_values(text: str) -> list:
     # "if channel = MB then ... if channel = IB then ..."
     # "= PI=> ...; = N=> ...; = PR=> ..."
     cond_re = re.compile(
-        r'(?:nếu|if)\s+(?:\w+\s*)?=\s*'       # "Nếu X =" or "if X ="
+        r'(?:if|if)\s+(?:\w+\s*)?=\s*'       # "Nếu X =" or "if X ="
         r'["\']?\s*([A-Za-z0-9_.+\-]+)\s*["\']?'  # capture the value
         r'\s*(?:=>|→|thì|then|:)',
         re.IGNORECASE
@@ -924,9 +924,9 @@ def extract_enum_values_from_note(note: str) -> list:
     Các pattern được nhận diện:
       - 'A/B/C'            → ['A', 'B', 'C']
       - 'A, B or C'        → ['A', 'B', 'C']
-      - 'null nếu ... not null nếu ...' → ['null_cif_level', 'not_null_account_level']
-      - Giá trị ngắn đơn lẻ (< 30 ký tự, không phải câu văn) → [value]
-    Returns [] nếu không detect được enum.
+      - 'null if ... not null if ...' → ['null_cif_level', 'not_null_account_level']
+      - Short single value (< 30 chars, not a sentence) → [value]
+    Returns [] if không detect được enum.
     """
     if not note:
         return []
@@ -1282,7 +1282,7 @@ def parse_error_table(soup: BeautifulSoup):
 # ---------------------------------------------------------------------------
 
 def _url_path_to_slug(url_path: str) -> str:
-    """Convert URL path like '/encrypt/v1/get-saving-account-transactions' → 'getSavingAccountTransactions'.
+    """Convert URL path like '/encrypt/v1/get-account-transactions' → 'getAccountTransactions'.
     Takes the last path segment and converts kebab-case to camelCase."""
     segment = url_path.rstrip('/').rsplit('/', 1)[-1]
     return _kebab_to_slug(segment)
@@ -1673,7 +1673,7 @@ def load_sampler():
 
         all_reqs = _collect_all_requests(col.get('item', []))
         if not all_reqs:
-            print(f"  ⚠️  Sampler '{sampler_path.name}': không có request nào — bỏ qua.")
+            print(f"  ⚠️  Sampler '{sampler_path.name}': no requests found — skipping.")
             continue
 
         # Accumulate ALL requests (for dep resolution across all samplers)
@@ -2005,7 +2005,7 @@ if __name__ == "__main__":
             for k in sorted(outdated):
                 print(f'       - "{k}"')
         if unknown:
-            print(f'  ❓  Sampler có field không có trong doc:')
+            print(f'  ❓  Sampler has fields not found in doc:')
             for k in sorted(unknown):
                 print(f'       - "{k}"')
         if extra_in_doc:
@@ -2035,7 +2035,7 @@ if __name__ == "__main__":
         _field_names_set = set(f['name'] for f in active_fields)
         _fields_are_garbage = (len(active_fields) > 1 and len(_field_names_set) == 1)
         if (not active_fields or _fields_are_garbage) and sam_body:
-            reason = 'Doc fields garbage (all same name)' if _fields_are_garbage else 'Doc không parse được fields'
+            reason = 'Doc fields garbage (all same name)' if _fields_are_garbage else 'Doc fields could not be parsed'
             print(f'\n  [SAMPLER→GEN] {reason} → import {len(sam_body)} field(s) từ sampler body')
             active_fields.clear()
             for field_name, field_val in sam_body.items():
@@ -2082,7 +2082,7 @@ if __name__ == "__main__":
             'doc_method':          doc_method,
             'method_is_doc_error': doc_method != sam_method,
             'url':                 sam_url,
-            'doc_path':            doc_path,          # e.g. /get-saving-account-transactions
+            'doc_path':            doc_path,          # e.g. /get-account-transactions
             'is_soap':             docx_contract.get('is_soap', False) if is_docx else False,
             'soap_error_samples':  docx_contract.get('soap_error_samples', []) if is_docx else [],
             'sampler_headers':     sam_headers,        # actual headers from working request

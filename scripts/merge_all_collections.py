@@ -104,7 +104,7 @@ def _build_env_replacements() -> dict:
             v = h.get('value', '')
             if not v or v.startswith('{{'):
                 continue
-            if k in ('apikey', 'esb-api-key'):
+            if k in ('apikey', 'x-api-key'):
                 replacements[v] = '{{apiKey}}'
             elif k == 'sessionid':
                 replacements[v] = '{{sessionId}}'
@@ -188,7 +188,7 @@ def merge_all():
     master = {
         "info": {
             "_postman_id": "master-collection-all-apis",
-            "name": "[master] Saving APIs — All Groups",
+            "name": "[master] All APIs — Merged Collection",
             "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
             "description": (
                 f"2 groups: corrected (chuẩn đúng) + doc_literal (mirror doc).\n"

@@ -16,7 +16,7 @@ Usage:
     python3 scripts/pull_confluence.py --page-id 123456
 
     # Pull theo title:
-    python3 scripts/pull_confluence.py --title "getSavingAccountTransactions"
+    python3 scripts/pull_confluence.py --title "getAccountTransactions"
 
     # Xem danh sách pages sẽ pull (dry-run):
     python3 scripts/pull_confluence.py --dry-run
@@ -330,7 +330,7 @@ def main():
         print(f"  {i:<4} {title:<50} {pid:<12} {slug}")
 
     if args.dry_run:
-        print("\n  (dry-run — không download)")
+        print("\n  (dry-run — not downloading)")
         return
 
     # Save pages

@@ -24,7 +24,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 # This is the ONLY config that stays hardcoded (backward compat).
 # Safe: unknown slugs just get an empty dict → no crash.
 DEPRECATED_REQUEST_FIELDS = {
-    'getSavingAccountTransactions': {
+    'getAccountTransactions': {
         'type': 'Renamed → transactionActivity (doc comment Jan 09 2026)',
     },
 }
@@ -33,7 +33,7 @@ DEPRECATED_REQUEST_FIELDS = {
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _url_path_to_slug(url_path: str) -> str:
-    """Convert URL path like '/encrypt/v1/get-saving-account-transactions' → 'getSavingAccountTransactions'."""
+    """Convert URL path like '/encrypt/v1/get-account-transactions' → 'getAccountTransactions'."""
     segment = url_path.rstrip('/').rsplit('/', 1)[-1]
     parts = re.split(r'[-_]+', segment)
     return parts[0] + ''.join(p.capitalize() for p in parts[1:])
@@ -110,7 +110,7 @@ def load_sampler_reqs() -> dict:
     """Load all requests from sampler collection. Returns {slug: req_data}."""
     sampler_path = _find_sampler()
     if not sampler_path or not Path(sampler_path).exists():
-        print(f'❌  Sampler không tồn tại trong postman/')
+        print(f'❌  Sampler not found in postman/')
         print('   Script này yêu cầu sampler. Đặt file vào postman/ rồi chạy lại.')
         sys.exit(1)
 
@@ -121,7 +121,7 @@ def load_sampler_reqs() -> dict:
     # Collect ALL requests recursively (not limited to 'mock' folder)
     all_reqs = _collect_all_requests(sampler.get('item', []))
     if not all_reqs:
-        print("⚠️  Sampler không có request nào để so sánh.")
+        print("⚠️  Sampler has no requests to compare.")
         return {}
 
     result = {}
@@ -306,7 +306,7 @@ def main():
         # Known variable substitutions (gen uses env vars instead of hardcoded values)
         _VAR_SUBS = {
             'apikey':       '{{apikey}}',
-            'esb-api-key':  '{{esbApiKey}}',
+            'x-api-key':  '{{esbApiKey}}',
             'sessionid':    '{{sessionId}}',
             'x-b3-traceid': '{{$guid}}',
             'x-trace-id':  '{{$guid}}',
@@ -321,12 +321,12 @@ def main():
             has_diff = True
             k_lower = k.lower()
             if sv is None:
-                print(f'    [GEN EXTRA]  {k}={gv!r}  — có trong spec, sampler không gửi')
+                print(f'    [GEN EXTRA]  {k}={gv!r}  — in spec but sampler does not send')
             elif gv is None:
                 if k_lower in _SESSION_ARTIFACTS:
-                    print(f'    [SAMPLER ONLY]  {k}=<session cookie>  — không add vào gen (session artifact)')
+                    print(f'    [SAMPLER ONLY]  {k}=<session cookie> — not added to gen (session artifact)')
                 else:
-                    print(f'    [SAMPLER ONLY]  {k}={sv!r}  — không add vào gen')
+                    print(f'    [SAMPLER ONLY]  {k}={sv!r}  — not added to gen')
             elif k_lower in _VAR_SUBS or gv.startswith('{{'):
                 # Gen correctly uses an env variable placeholder instead of a hardcoded value
                 print(f'    ✅  {k}: sampler=<hardcoded>  gen={gv}  — gen dùng env variable (best practice)')
@@ -348,7 +348,7 @@ def main():
 
         for f in sorted(only_sampler):
             if f in deprecated:
-                print(f'    [SAMPLER OUTDATED]  "{f}" có trong sampler nhưng không có trong gen — {deprecated[f]}')
+                print(f'    [SAMPLER OUTDATED]  "{f}" in sampler but not in gen — {deprecated[f]}')
             else:
                 print(f'    ⚠️  "{f}" chỉ có trong sampler')
 

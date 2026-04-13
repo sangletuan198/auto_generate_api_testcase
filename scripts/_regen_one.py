@@ -6,7 +6,7 @@ Usage:
     python3 scripts/_regen_one.py <api_slug> <output_subdir>
 
 Example:
-    python3 scripts/_regen_one.py openFlexSaving output/corrected_draft
+    python3 scripts/_regen_one.py createResource output/corrected_draft
 """
 import sys
 import json
@@ -32,7 +32,7 @@ def _prompt_json_body(prompt_text: str):
     try:
         return json.loads(raw)
     except json.JSONDecodeError as exc:
-        print(f"  ⚠️  JSON không hợp lệ: {exc}")
+        print(f"  ⚠️  Invalid JSON: {exc}")
         return None
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -85,7 +85,7 @@ def main():
 
     # ── Interactive prompt: ask for response body if not auto-detected ───────
     if not api_def.get("response_data_fields") and sys.stdin.isatty():
-        print(f"\n  ⚠️  Không tìm thấy response body mẫu cho '{target_slug}' (sampler không có example).")
+        print(f"\n  ⚠️  No sample response body found for '{target_slug}' (sampler has no example).")
         print("  Nhập response JSON để tạo assertions cấu trúc response body.")
 
         success_body = _prompt_json_body("\n  📋 SUCCESS response JSON (HTTP 200):")

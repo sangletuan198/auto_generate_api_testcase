@@ -1,5 +1,5 @@
 {
-  "_comment": "Cấu hình dự án — BASE_URL, headers, error codes, collection variables...",
+  "_comment": "Project configuration — BASE_URL, headers, error codes, collection variables...",
 
   "base_url": "https://api-uat.example-bank.com",
 
@@ -75,7 +75,7 @@
   ],
 
   "sampler_outdated_fields": {
-    "getSavingAccountTransactions": {
+    "getAccountTransactions": {
       "type": "Renamed → transactionActivity (doc comment Jan 09 2026)"
     }
   },

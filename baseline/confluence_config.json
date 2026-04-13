@@ -1,5 +1,5 @@
 {
-  "_comment": "Confluence connection config — edit values, hoặc dùng env vars (CONFLUENCE_URL, CONFLUENCE_API_TOKEN, etc.)",
+  "_comment": "Confluence connection config — edit values or use env vars (CONFLUENCE_URL, CONFLUENCE_API_TOKEN, etc.)",
 
   "confluence_url": "https://your-domain.atlassian.net/wiki",
   "space_key": "MYPROJECT",

@@ -63,7 +63,7 @@ KPI_TARGETS              = _gen.KPI_TARGETS
 # Build API definitions from contracts_from_html.json
 # ---------------------------------------------------------------------------
 def _kebab_to_camel(s: str) -> str:
-    """Convert 'open-flex-saving' or 'openFlexSaving' to camelCase."""
+    """Convert 'create-resource' or 'createResource' to camelCase."""
     s = s.strip('/ ')
     parts = re.split(r'[-_]+', s)
     return parts[0] + ''.join(p.capitalize() for p in parts[1:])
@@ -208,7 +208,7 @@ _KNOWN_ENUMS = _load_known_enums()
 
 def load_contracts() -> dict:
     if not CONTRACTS.exists():
-        print(f"❌  contracts_from_html.json không tồn tại: {CONTRACTS}")
+        print(f"❌  contracts_from_html.json not found: {CONTRACTS}")
         print("   → Chạy parse_html_docs.py trước (Bước 3).")
         sys.exit(1)
     with open(CONTRACTS, encoding="utf-8") as f:
@@ -602,7 +602,7 @@ def _build_generic_api_def(slug: str, contract: dict, use_doc_method: bool,
     slug_lower = slug.lower()
     if any(kw in slug_lower for kw in ('list', 'search', 'history', 'insight', 'query')):
         # Guess array field name from common patterns
-        for candidate in ('savingList', 'transactionList', 'list', 'items', 'data', 'records', 'results'):
+        for candidate in ('itemList', 'transactionList', 'list', 'items', 'data', 'records', 'results'):
             resp_array_field = candidate
             break
         # Array items likely have similar fields to response data fields
@@ -750,7 +750,7 @@ def run(use_doc_method: bool, out_subdir: str, label: str,
             and contracts.get(a['slug'], {}).get('url', '?') == '?'
         ]
         if no_sampler:
-            print(f"  ⚠️  Bỏ qua corrected cho API không có sampler: {', '.join(no_sampler)}")
+            print(f"  ⚠️  Skipping corrected for APIs without sampler: {', '.join(no_sampler)}")
         apis = [a for a in apis if a['slug'] not in set(no_sampler)]
 
     root_dir  = ROOT_REPO / out_subdir
@@ -1048,14 +1048,14 @@ def _write_single_api_diff(slug: str, c: dict, sampler_bodies: dict, lines: list
     # Script Assumptions
     lines += [
         "",
-        "## Script Assumptions (không có trong doc)", "",
+        "## Script Assumptions (not in doc)", "",
         "> Các mục dưới đây **KHÔNG có trong tài liệu** — script tự thêm dựa trên convention.", "",
         "| TC prefix | Validate item | Expected value | Nguồn | Lý do |",
         "|-----------|--------------|---------------|-------|-------|",
-        "| BVA-001 | String max length | 400 khi > 260 chars | `[ASSUMPTION]` | Doc không nêu length limit |",
-        "| EP-002~003 | Invalid partition | 400 | `[ASSUMPTION]` | Doc không liệt kê invalid cases |",
-        "| HDR-001~005 | Missing/invalid headers | 401/415/400 | `[ASSUMPTION]` | Doc không nêu |",
-        "| MTH-001~004 | Sai HTTP method → 405 | 405 | `[ASSUMPTION]` | Doc không đề cập |",
+        "| BVA-001 | String max length | 400 khi > 260 chars | `[ASSUMPTION]` | Doc does not specify length limit |",
+        "| EP-002~003 | Invalid partition | 400 | `[ASSUMPTION]` | Doc does not list invalid cases |",
+        "| HDR-001~005 | Missing/invalid headers | 401/415/400 | `[ASSUMPTION]` | Doc does not specify |",
+        "| MTH-001~004 | Wrong HTTP method → 405 | 405 | `[ASSUMPTION]` | Doc does not mention |",
         "| SCH/SEC/IDM/DAT/PER/EDG | Convention checks | varies | `[ASSUMPTION]` | REST convention / KPI |",
         "",
     ]

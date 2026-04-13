@@ -177,7 +177,7 @@ def _is_struck(cell) -> bool:
 
 
 def _kebab_to_slug(s: str) -> str:
-    """Convert /get-saving-account-transactions → getSavingAccountTransactions."""
+    """Convert /get-account-transactions → getAccountTransactions."""
     s = s.strip('/ ').strip()
     parts = re.split(r'[-_]+', s)
     return parts[0] + ''.join(p.capitalize() for p in parts[1:])
@@ -697,7 +697,7 @@ def parse_docx_file(docx_path: Path) -> Optional[dict]:
             'doc_method':           str,   # from doc
             'method_is_doc_error':  bool,
             'url':                  str,
-            'doc_path':             str,   # e.g. /get-saving-account-transactions
+            'doc_path':             str,   # e.g. /get-account-transactions
             'active_request_fields': [...],
             'struck_request_fields': [...],
             'active_errors':         [...],

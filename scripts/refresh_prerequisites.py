@@ -58,7 +58,7 @@ def _extract_endpoint(raw_url: str) -> str:
 
 def _endpoint_to_slug(endpoint: str) -> str:
     """Convert endpoint path to camelCase slug.
-    '/int-esb/open-saving-service/v1/open-flex-saving' → 'openFlexSaving'
+    '/api/resource-service/v1/create-resource' → 'createResource'
     '/esbuat7801/accountService/v1/callOFS'             → 'callOFS'
     """
     # Take the last path segment

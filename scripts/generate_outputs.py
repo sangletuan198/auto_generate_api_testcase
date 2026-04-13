@@ -80,7 +80,7 @@ _STATUS_EQUIVALENTS = {
 }
 
 _VN_KEYWORD_FILTER  = _project_cfg.get("vietnamese_keyword_filter",
-                                        ["nếu", "lấy", "theo", "không", "hiện", "khi"])
+                                        ["if", "get", "by", "no", "show", "when"])
 
 _RESPONSE_TIME_MS   = _project_cfg.get("response_time_threshold_ms", 5000)
 
@@ -1277,7 +1277,7 @@ def _auto_business_rules(api_def: dict) -> list:
     # ── CIF / Account validation ──
     cif_field = next((k for k in rb if k.lower() in ('cifno', 'cif', 'cifnumber')), None)
     acc_field = next((k for k in rb if k.lower() in
-                      ('accno', 'acctno', 'accountno', 'aaaccount', 'savingaccount',
+                      ('accno', 'acctno', 'accountno', 'aaaccount', 'targetaccount',
                        'accountnumber', 'account_number', 'acctnumber')), None)
     if cif_field:
         cases.append({
@@ -2045,7 +2045,7 @@ def create_coverage_summary(api_slug: str, api_def: dict, cases: list, output_fi
         "",
         "## Coverage Checklist (Prompt Requirements)",
         "",
-        f"Bảng dưới bám sát **{len(PROMPT_REQUIREMENTS)} yêu cầu bắt buộc** từ prompt gốc"
+        f"The table below follows **{len(PROMPT_REQUIREMENTS)} mandatory requirements** from the original prompt"
         f" + {len(EXTRA_CATEGORIES)} category bổ sung (đánh dấu *extra*).",
         "",
         "| # | Requirement (từ prompt) | Covered | TCs | Ghi chú |",
@@ -2146,7 +2146,7 @@ def create_coverage_summary(api_slug: str, api_def: dict, cases: list, output_fi
             f"| 6 | HTTP status codes covered | ≥ {kpi['min_http_status_codes']} distinct codes | {status_count} | — | {http_ok} |",
             "",
             "> **Giải thích**:",
-            "> - **Prompt requirements covered**: số trong 15 yêu cầu bắt buộc có ít nhất 1 TC.",
+            "> - **Prompt requirements covered**: số trong 15 mandatory requirements có ít nhất 1 TC.",
             "> - **P1 %**: tỉ lệ TC mức Critical.",
             "> - **P1+P2 %**: tỉ lệ TC mức Critical + High.",
             "> - **Error codes**: tất cả mã lỗi khai báo trong doc đều có TC tương ứng.",
@@ -2248,7 +2248,7 @@ def main():
 
 if __name__ == "__main__":
     print()
-    print("⚠️  generate_outputs.py không nên chạy trực tiếp.")
+    print("⚠️  generate_outputs.py should not be run directly.")
     print("   Nó chỉ là thư viện (library) cho regen_from_contracts.py.")
     print()
     print("   ╔══════════════════════════════════════════════════════════╗")

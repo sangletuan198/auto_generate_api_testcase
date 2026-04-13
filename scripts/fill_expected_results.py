@@ -5,8 +5,8 @@ fill_expected_results.py
 Sau khi Newman chạy xong:
   - Excel cột "Results"        ← điền actual response từ newman-report.json
   - Excel cột "Expected Result" ← generate lại từ Postman Collection (HTTP status
-                                  + error code nếu có), KHÔNG ghi đè bằng response
-  - CSV cột "Expected Result"   ← giữ nguyên text generate (không thay đổi)
+                                  + error code if available), do NOT overwrite with response
+  - CSV cột "Expected Result"   ← keep generated text unchanged
 
 Usage:
     python3 scripts/fill_expected_results.py \\

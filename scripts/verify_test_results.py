@@ -7,10 +7,10 @@ từng test case thành 4 nhóm:
 
   ✅ DOC+PASS        Có trong tài liệu, test PASS đúng kỳ vọng
   ⚠️  DOC+FAIL        Có trong tài liệu, nhưng test FAIL (server chưa đúng doc)
-  🔵 ASSUMPTION+PASS  Script tự thêm (không có trong doc), test PASS
+  🔵 ASSUMPTION+PASS  Script-added (not in doc), test PASS
   ❌ ASSUMPTION+FAIL  Script tự thêm, test FAIL (assumption sai hoặc server lỗi)
 
-Đồng thời phân tích từng validate item trong script:
+Also analyses each validate item in the script:
   [FROM_DOC]   HTTP status / error code / error message từ tài liệu HTML
   [ASSUMPTION] Giá trị script tự suy luận / suy đoán
 
@@ -56,23 +56,23 @@ DOC_CATEGORIES = {
 
 # Các TC category mà giá trị hoàn toàn do script ASSUMPTION
 ASSUMPTION_CATEGORIES = {
-    "Boundary Value Analysis",    # 260 chars → 400: doc không nói length limit
-    "Equivalence Partitioning",   # doc không liệt kê invalid partition cụ thể
-    "Header Validation",          # doc thường không nói rõ 415 / 400 cho header
-    "HTTP Method",                # 405 khi gọi GET/PUT — doc thường không đề cập
-    "Security",                   # XSS, SQLi → 400: không trong doc
-    "Edge Cases",                 # Unicode, null byte: không trong doc
+    "Boundary Value Analysis",    # 260 chars → 400: doc does not specify length limit
+    "Equivalence Partitioning",   # doc does not list specific invalid partitions
+    "Header Validation",          # doc usually does not specify 415 / 400 cho header
+    "HTTP Method",                # 405 khi gọi GET/PUT — doc usually does not mention
+    "Security",                   # XSS, SQLi → 400: not in doc
+    "Edge Cases",                 # Unicode, null byte: not in doc
     "Rate Limiting",              # doc thường không có
-    "Data Consistency",           # không trong doc functional spec
-    "Idempotency",                # thường không trong doc
-    "Performance",                # doc không có threshold 5000ms
+    "Data Consistency",           # not in doc functional spec
+    "Idempotency",                # thường not in doc
+    "Performance",                # doc has no threshold 5000ms
     "Response Header",            # doc hiếm khi nói Content-Type response
     "Negative Validation",        # một phần từ doc, một phần assumption
     "Schema Validation",          # schema fields từ doc nhưng type assertion = assumption
     "Business Rules",             # từ doc nhưng cách test cụ thể = assumption
 }
 
-# Assertions tên cụ thể được coi là FROM_DOC nếu có error code trong contracts
+# Assertions with specific names are considered FROM_DOC if they have error codes in contracts
 _DOC_ASSERTION_PATTERNS = [
     r"HTTP status is \d+",              # status code từ doc
     r"Error code is DT\.",              # error code cụ thể từ doc
@@ -417,18 +417,18 @@ def build_diff_section(api_data: dict) -> list[str]:
     # --- Assumptions (what the script adds on top) ---
     lines.append(f"| | **Script Assumptions** | | |")
     assumptions = [
-        ("HTTP status 415 khi Content-Type sai",     "HDR-001/002",  "Doc không nêu"),
-        ("HTTP status 405 khi sai HTTP method",       "MTH-001~004",  "Doc không nêu"),
-        ("HTTP status 400 cho BVA (260 chars, etc.)", "BVA-001~004",  "Doc không có length limit"),
-        ("HTTP status 400 cho EP invalid partition",  "EP-002~003",   "Doc không liệt kê invalid partitions"),
+        ("HTTP status 415 khi Content-Type sai",     "HDR-001/002",  "Doc does not specify"),
+        ("HTTP status 405 khi sai HTTP method",       "MTH-001~004",  "Doc does not specify"),
+        ("HTTP status 400 cho BVA (260 chars, etc.)", "BVA-001~004",  "Doc has no length limit"),
+        ("HTTP status 400 cho EP invalid partition",  "EP-002~003",   "Doc does not list invalid partitions"),
         ("Response time < 5000ms",                    "PER-001",      "KPI target từ baseline/coverage_requirements.json"),
         ("Response Content-Type là application/json", "Tất cả",       "REST convention"),
         ("Response envelope: code, message, data",    "SCH-001~003",  "REST convention"),
         ("XSS / SQLi / null-byte → 400",              "SEC-001~004",  "Security best practice"),
         ("Idempotency: repeat call = same result",    "IDM-001~002",  "REST convention"),
         ("Data consistency: repeat call = same data", "DAT-001",      "REST convention"),
-        ("Missing channel header → 400",              "HDR-003",      "Assumption, doc không nêu cụ thể"),
-        ("Missing x-trace-id header → 400",          "HDR-005",      "Assumption, doc không nêu cụ thể"),
+        ("Missing channel header → 400",              "HDR-003",      "Assumption, not explicitly stated in doc"),
+        ("Missing x-trace-id header → 400",          "HDR-005",      "Assumption, not explicitly stated in doc"),
         ("Empty body → 400",                          "NEG-*",        "Assumption"),
         ("Whitespace-only field → 400",               "NEG-*",        "Assumption"),
         ("Unicode chars trong field → 400",           "EDG-001",      "Assumption"),
@@ -466,8 +466,8 @@ def format_api_report(d: dict, bundle_ts: str) -> str:
     lines.append(f"|------|------|---------|")
     lines.append(f"| ✅ | DOC+PASS | Có trong tài liệu, test PASS đúng kỳ vọng |")
     lines.append(f"| ⚠️  | DOC+FAIL | Có trong tài liệu, test FAIL (server chưa đúng doc) |")
-    lines.append(f"| 🔵 | ASSUMPTION+PASS | Script tự thêm (không trong doc), assumption đúng → PASS |")
-    lines.append(f"| ❌ | ASSUMPTION+FAIL | Script tự thêm, assumption sai hoặc server không theo convention → FAIL |")
+    lines.append(f"| 🔵 | ASSUMPTION+PASS | Script tự thêm (not in doc), assumption đúng → PASS |")
+    lines.append(f"| ❌ | ASSUMPTION+FAIL | Script-added, assumption wrong or server does not follow convention → FAIL |")
     lines.append(f"")
 
     s = d["stats"]
@@ -553,7 +553,7 @@ def _append_api_detail(lines: list, d: dict):
     if ass_passes:
         lines.append(f"## 🔵 ASSUMPTION+PASS — Chi tiết")
         lines.append(f"")
-        lines.append("> Script tự thêm (không có trong doc), assumption đúng — server phản hồi đúng kỳ vọng.")
+        lines.append("> Script-added (not in doc), assumption correct — server responded as expected.")
         lines.append(f"")
         for r in ass_passes:
             lines.append(f"### `{r['cid']}` — {r['display_name']}")
@@ -567,7 +567,7 @@ def _append_api_detail(lines: list, d: dict):
         lines.append(f"## ❌ ASSUMPTION+FAIL — Chi tiết")
         lines.append(f"")
         lines.append(
-            "> Assumption của script không khớp với behavior của server.\n"
+            "> Script assumption does not match server behaviour.\n"
             "> → Có thể cần điều chỉnh expected_status trong script."
         )
         lines.append(f"")
@@ -609,7 +609,7 @@ def main():
     if args.bundle:
         bundle_dir = BUNDLES_DIR / args.bundle
         if not bundle_dir.exists():
-            print(f"[ERROR] Bundle không tồn tại: {bundle_dir}", file=sys.stderr)
+            print(f"[ERROR] Bundle not found: {bundle_dir}", file=sys.stderr)
             sys.exit(1)
     else:
         bundle_dir = find_latest_bundle()
@@ -643,7 +643,7 @@ def main():
             print(f"[INFO] Report saved: {per_api_path.relative_to(bundle_dir)}", file=sys.stderr)
 
     if not all_api_data:
-        print("[WARN] Không có API nào để phân tích.", file=sys.stderr)
+        print("[WARN] No APIs to analyse.", file=sys.stderr)
         sys.exit(0)
 
     print(f"[INFO] Done. {len(all_api_data)} API(s) processed. Per-API reports written.", file=sys.stderr)
