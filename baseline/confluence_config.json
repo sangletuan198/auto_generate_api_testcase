@@ -1,0 +1,20 @@
+{
+  "_comment": "Confluence connection config — edit values, hoặc dùng env vars (CONFLUENCE_URL, CONFLUENCE_API_TOKEN, etc.)",
+
+  "confluence_url": "https://your-domain.atlassian.net/wiki",
+  "space_key": "MYPROJECT",
+  "username": "your.email@company.com",
+  "api_token": "",
+  "personal_token": "",
+  "auth_type": "token",
+
+  "cql_filter": "title ~ \"API\"",
+  "label_filter": "api-spec",
+  "ancestor_page_id": "",
+
+  "body_format": "storage",
+  "filename_pattern": "view-source_{slug}.html",
+  "max_pages": 200,
+  "rate_limit_delay": 0.2,
+  "skip_if_exists": false
+}

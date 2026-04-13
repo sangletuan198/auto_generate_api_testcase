@@ -1,0 +1,70 @@
+{
+  "_comment": "Excel output format matching Template TC 4.xlsx — mỗi API = 1 sheet",
+
+  "sheet_name_template": "API_{slug}",
+  "header_row": 1,
+  "data_start_row": 3,
+
+  "merged_header": {
+    "row": 1,
+    "value_field": "feature",
+    "merge_range": "A1:{last_col}1"
+  },
+
+  "columns": [
+    {"key": "test_case_id",    "header": "Test Case ID",       "col": "A", "width": 14},
+    {"key": "feature",         "header": "Feature",            "col": "B", "width": 15},
+    {"key": "scenarios_suite", "header": "Scenarios Suite",    "col": "C", "width": 18},
+    {"key": "summary",         "header": "Summary",            "col": "D", "width": 45},
+    {"key": "precondition",    "header": "Precondition",       "col": "E", "width": 25},
+    {"key": "assignee_name",   "header": "Assignee Name",      "col": "F", "width": 14},
+    {"key": "priority",        "header": "Priority",           "col": "G", "width": 10},
+    {"key": "test_data",       "header": "Test Data",          "col": "H", "width": 40},
+    {"key": "steps",           "header": "Steps",              "col": "I", "width": 35},
+    {"key": "expected_result", "header": "Expected Result",    "col": "J", "width": 50},
+    {"key": "results",         "header": "Results",            "col": "K", "width": 10},
+    {"key": "test_type",       "header": "Test Type",          "col": "L", "width": 12},
+    {"key": "test_environments","header": "Test Environments", "col": "M", "width": 14},
+    {"key": "tag",             "header": "Tag",                "col": "N", "width": 12},
+    {"key": "test_repository", "header": "Test Repository",    "col": "O", "width": 18},
+    {"key": "labels",          "header": "Labels",             "col": "P", "width": 14}
+  ],
+
+  "field_mapping": {
+    "_comment": "Maps internal case fields to Excel columns",
+    "test_case_id":     "{row_number}",
+    "feature":          "{api_feature}",
+    "scenarios_suite":  "{scenarios_suite}",
+    "summary":          "{case_name}",
+    "precondition":     "1. Input data",
+    "assignee_name":    "",
+    "priority":         "{priority_mapped}",
+    "test_data":        "{request_body_json}",
+    "steps":            "1. Call Request\n2. Check Response",
+    "expected_result":  "{expected_result_json}",
+    "results":          "",
+    "test_type":        "",
+    "test_environments":"UAT",
+    "tag":              "",
+    "test_repository":  "",
+    "labels":           ""
+  },
+
+  "priority_map": {
+    "P1": "High",
+    "P2": "Medium",
+    "P3": "Low"
+  },
+
+  "scenarios_suite_map": {
+    "_comment": "Map category to Scenarios Suite value in Excel",
+    "Positive": "HappyFlow",
+    "default": "UnHappyFlow"
+  },
+
+  "feature_map": {
+    "_comment": "Map API slug to Feature column. Override per-API, fallback = slug",
+    "getAccountByCif": "Account",
+    "default": "{slug}"
+  }
+}

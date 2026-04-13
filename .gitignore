@@ -1,0 +1,54 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# ── Generated output (do not commit) ─────────────────────────────────────────
+/output/*
+!/output/.gitkeep
+
+# ── Postman files (may contain tokens/credentials) ──────────────────────────
+/postman/*
+!/postman/.gitkeep
+
+# ── Input docs (API spec HTML/Word — not redistributable) ────────────────────
+/input/*
+!/input/.gitkeep
+/docs/*
+!/docs/.gitkeep
+
+# ── Auto-converted .doc → .html ──────────────────────────────────────────────
+*._converted.html
+
+# ── Contract intermediates (contain sampler data) ────────────────────────────
+scripts/contracts_from_html.json
+
+# ── Manual prerequisites (environment-specific) ──────────────────────────────
+baseline/manual_prerequisites.json
+
+# ── Temp / debug scripts ─────────────────────────────────────────────────────
+scripts/_*.sh
+scripts/_check_*.py
+scripts/_deep_*.py
+scripts/_move_*.sh
+
+# ── OS / Editor ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Newman reports ───────────────────────────────────────────────────────────
+output/reports/
+output/bundles/
+*.html.report

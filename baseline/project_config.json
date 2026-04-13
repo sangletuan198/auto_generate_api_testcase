@@ -1,0 +1,87 @@
+{
+  "_comment": "Cấu hình dự án — BASE_URL, headers, error codes, collection variables...",
+
+  "base_url": "https://api-uat.example-bank.com",
+
+  "standard_headers": [
+    {"key": "accept",       "value": "application/json"},
+    {"key": "Content-Type", "value": "application/json"},
+    {"key": "channel",      "value": "MyApp"},
+    {"key": "x-trace-id",  "value": "{{$guid}}"},
+    {"key": "apikey",       "value": "{{apikey}}"}
+  ],
+
+  "response_envelope": ["code", "message", "data"],
+
+  "common_errors": {
+    "UNAUTHORIZED":          {"code": "XX.000.00.401", "http": 401},
+    "FORBIDDEN":             {"code": "XX.000.00.403", "http": 403},
+    "SYSTEM_TIMEOUT":        {"code": "XX.000.00.408", "http": 408},
+    "INTERNAL_SERVER_ERROR": {"code": "XX.000.00.500", "http": 500}
+  },
+
+  "default_collection_variables": [
+    {"key": "baseUrl",    "value": "{{BASE_URL}}"},
+    {"key": "apikey",     "value": "{{apikey}}"},
+    {"key": "esbApiKey",  "value": ""},
+    {"key": "sessionId",  "value": ""},
+    {"key": "channel",    "value": "MyApp"},
+    {"key": "traceId",    "value": "{{$guid}}"}
+  ],
+
+  "header_to_variable_map": {
+    "apikey":      "apikey",
+    "esb-api-key": "esbApiKey",
+    "sessionid":   "sessionId"
+  },
+
+  "header_skip": ["cookie"],
+  "header_variable_replacements": {
+    "apikey":       "{{apikey}}",
+    "esb-api-key":  "{{esbApiKey}}",
+    "sessionid":    "{{sessionId}}",
+    "x-b3-traceid": "{{$guid}}",
+    "x-trace-id":  "{{$guid}}"
+  },
+
+  "status_equivalents": {
+    "400": [400, 422],
+    "415": [415, 422],
+    "403": [401, 403]
+  },
+
+  "error_code_http_map": {
+    "XX.000.00.401": 401,
+    "XX.000.00.403": 403,
+    "XX.000.00.408": 408,
+    "XX.000.00.500": 500
+  },
+
+  "http_status_inference_patterns": [
+    {"pattern": "401", "status": 401},
+    {"pattern": "403", "status": 403},
+    {"pattern": "404", "status": 404},
+    {"pattern": "000", "status": 404},
+    {"pattern": "400", "status": 400},
+    {"pattern": "001", "status": 400}
+  ],
+
+  "common_error_keys_skip": [
+    "UNAUTHORIZED", "FORBIDDEN", "SYSTEM_TIMEOUT", "INTERNAL_SERVER_ERROR"
+  ],
+
+  "vietnamese_keyword_filter": [
+    "nếu", "lấy", "theo", "không", "hiện", "khi"
+  ],
+
+  "sampler_outdated_fields": {
+    "getSavingAccountTransactions": {
+      "type": "Renamed → transactionActivity (doc comment Jan 09 2026)"
+    }
+  },
+
+  "sampler_only_headers": ["Cookie"],
+  "gen_extra_headers": ["channel", "x-trace-id"],
+
+  "response_time_threshold_ms": 5000
+}

@@ -1,0 +1,48 @@
+{
+  "_comment": "Generic rules for detecting request/error tables in API documentation. All keyword lists use OR logic between groups, AND logic within each group.",
+
+  "request_table_keyword_groups": [
+    ["parameter", "mandatory (y/n)"],
+    ["parameter", "mandatory"],
+    ["api gee/esb field", "mandatory"],
+    ["business name", "mandatory"]
+  ],
+
+  "error_table_keyword_groups": [
+    ["error code", "messagekey"],
+    ["errorcode", "message"],
+    ["declinreason", "stt"],
+    ["esb.", "message eng"]
+  ],
+
+  "error_code_pattern": "^[A-Z]{1,5}\\.",
+  "_error_code_pattern_comment": "Regex to validate error codes. Currently matches dot-delimited codes like DT.005.00.000 or ERR.001",
+
+  "error_table_col0_is_sequence": true,
+  "_error_table_col0_comment": "When true, error code starts at col[1] (col[0] is STT/sequence number). Set false if code is in col[0].",
+
+  "request_table_column_aliases": {
+    "parameter": ["parameter", "field", "field name", "param", "api gee/esb field", "api gee / esb field", "business name"],
+    "type":      ["type", "data type", "datatype"],
+    "mandatory": ["mandatory", "mandatory (y/n)", "mandatory (y/n/o)", "required", "bắt buộc"],
+    "note":      ["note", "notes", "note/example", "example", "remark", "ghi chú"],
+    "description": ["description", "mô tả"],
+    "default_value": ["default value", "default", "giá trị mặc định"],
+    "level":     ["level", "lv", "cấp"]
+  },
+  "_request_table_column_aliases_comment": "Maps logical column roles to possible header text (case-insensitive). Used for auto-detection of column positions from header row. Note: 'description' removed from 'note' to avoid mis-mapping; 'default_value' added to capture cross-references like 'See ... at 1.2'.",
+
+  "error_table_column_aliases": {
+    "code":    ["error code", "errorcode", "error_code", "code", "mã lỗi"],
+    "key":     ["messagekey", "message key", "error key", "key"],
+    "reason":  ["declinereason", "declinreason", "decline reason", "reason", "message", "message eng", "lý do"]
+  },
+  "_error_table_column_aliases_comment": "Maps logical error column roles to possible header text (case-insensitive).",
+
+  "prose_filter_keywords": [
+    "nếu", "lấy", "theo", "không", "hiện", "khi",
+    "output", "query", "input", "level", "group",
+    "tính", "là", "dùng", "đầu"
+  ],
+  "_prose_filter_keywords_comment": "Keywords that indicate a Note cell is prose/description rather than an enum value. Used in extract_enum_values_from_note()."
+}

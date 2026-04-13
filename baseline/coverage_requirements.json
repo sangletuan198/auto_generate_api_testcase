@@ -1,0 +1,32 @@
+{
+  "_comment": "Cấu hình duy nhất cho coverage requirements + KPI targets. Chỉnh tại đây, không cần sửa code.",
+
+  "coverage_requirements": [
+    { "id": 1,  "name": "Positive scenarios",             "category_key": "Positive",                 "description": "Luồng thành công" },
+    { "id": 2,  "name": "Negative scenarios",             "category_key": "Negative Validation",      "description": "Field sai, thiếu, sai kiểu" },
+    { "id": 3,  "name": "Boundary Value Analysis (BVA)",  "category_key": "Boundary Value Analysis",  "description": "Min/max/boundary length" },
+    { "id": 4,  "name": "Equivalence Partitioning (EP)",  "category_key": "Equivalence Partitioning", "description": "Nhóm giá trị tương đương" },
+    { "id": 5,  "name": "Authentication & Authorization", "category_key": "Authentication",           "description": "Token hết hạn, sai, thiếu" },
+    { "id": 6,  "name": "Business Rules validation",      "category_key": "Business Rules",           "description": "Quy tắc nghiệp vụ đặc thù" },
+    { "id": 7,  "name": "HTTP Status Codes validation",   "category_key": "__http_status_codes__",    "description": "Distinct HTTP codes covered" },
+    { "id": 8,  "name": "Schema validation",              "category_key": "Schema Validation",        "description": "Response structure, field types" },
+    { "id": 9,  "name": "Header validation",              "category_key": "Header Validation",        "description": "apikey, Content-Type, Channel..." },
+    { "id": 10, "name": "Rate limiting / throttling",     "category_key": "Rate Limiting",            "description": "Rapid request smoke test" },
+    { "id": 11, "name": "Error handling (4xx, 5xx)",      "category_key": "Error Handling",           "description": "Error code + message validation" },
+    { "id": 12, "name": "Security smoke tests",           "category_key": "Security",                 "description": "SQL injection, XSS, tampered token" },
+    { "id": 13, "name": "Data consistency checks",        "category_key": "Data Consistency",         "description": "Repeated calls return same data" },
+    { "id": 14, "name": "Idempotency",                    "category_key": "Idempotency",              "description": "Duplicate request behaviour" },
+    { "id": 15, "name": "Edge / corner cases",            "category_key": "Edge Cases",               "description": "Null, empty, special chars, wrong type" },
+    { "id": 16, "name": "HTTP Method",                    "category_key": "HTTP Method",              "description": "Wrong-method rejection (GET/PUT/DELETE → 405)" },
+    { "id": 17, "name": "Response Header",                "category_key": "Response Header",          "description": "Content-Type trong response" }
+  ],
+
+  "kpi_targets": {
+    "prompt_coverage_pct":   90,
+    "min_total_tcs":         50,
+    "min_p1_pct":            30,
+    "min_p1p2_pct":          70,
+    "min_http_status_codes": 6,
+    "min_error_codes":       3
+  }
+}

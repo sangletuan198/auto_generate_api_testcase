@@ -1,0 +1,12 @@
+{
+  "_comment": "Override: last path segment of sampler URL → slug in HTML_FILES. Use '__SKIP__' to ignore a sampler request entirely.",
+
+  "get-account-saving-statistic-monthly": "getSavingInsightMonthly",
+  "get-account-saving-statistic-yearly":  "getSavingInsightYearly",
+  "download-deposit-confirmation":        "__SKIP__",
+
+  "_soap_op_overrides_comment": "SOAP operation name (from XML body) → doc slug. Used when SOAP op name differs from doc slug.",
+  "_soap_op_overrides": {
+    "GetRetailAccountsofCustomer": "DisplayalltheretailaccountsoftheCustomer"
+  }
+}

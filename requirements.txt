@@ -1,0 +1,5 @@
+# Core dependencies for Generate_Tcs pipeline
+beautifulsoup4>=4.12
+lxml>=4.9
+python-docx>=0.8       # .docx/.doc parsing (optional if only using .html docs)
+openpyxl>=3.1           # Excel output matching Template TC 4.xlsx format

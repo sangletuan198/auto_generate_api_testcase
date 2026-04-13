@@ -1,0 +1,428 @@
+{
+  "_comment": "Common test case templates — used by generate_common_cases(). Fields: cid, name (template with {f1},{f2}), category, status, priority, body_mod, header_mod, method_mod. Special body_mod keys: __remove__, __set_null__, __raw_body__",
+
+  "positive": [
+    {
+      "cid": "POS-001", "name": "Valid request with all parameters",
+      "category": "Positive", "status": 200, "priority": "P1",
+      "body_mod": {}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "POS-002", "name": "Valid request with mandatory parameters only",
+      "category": "Positive", "status": 200, "priority": "P1",
+      "body_mod": {"__remove__": "__OPTIONAL_FIELDS__"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "POS-003", "name": "Valid request with regenerated trace id",
+      "category": "Positive", "status": 200, "priority": "P2",
+      "body_mod": {}, "header_mod": {"x-trace-id": "TRACE-REGEN-001"}, "method_mod": null
+    },
+    {
+      "cid": "POS-004", "name": "Valid request with Accept-Language en-US",
+      "category": "Positive", "status": 200, "priority": "P2",
+      "body_mod": {}, "header_mod": {"Accept-Language": "en-US"}, "method_mod": null
+    }
+  ],
+
+  "negative_per_mandatory_field": [
+    {
+      "cid_suffix": 1, "name": "Missing mandatory field: {field}",
+      "category": "Negative Validation", "status": 400, "priority": "P1",
+      "body_mod": {"__remove__": "{field}"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid_suffix": 2, "name": "Empty string in mandatory field: {field}",
+      "category": "Negative Validation", "status": 400, "priority": "P1",
+      "body_mod": {"{field}": ""}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid_suffix": 3, "name": "Whitespace only in mandatory field: {field}",
+      "category": "Negative Validation", "status": 400, "priority": "P2",
+      "body_mod": {"{field}": "   "}, "header_mod": {}, "method_mod": null
+    }
+  ],
+
+  "negative_extra": [
+    {
+      "cid": "NEG-{next}", "name": "Null value in mandatory field: {f1}",
+      "category": "Negative Validation", "status": 400, "priority": "P1",
+      "body_mod": {"__set_null__": "{f1}"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "NEG-{next}", "name": "Empty request body",
+      "category": "Negative Validation", "status": 400, "priority": "P1",
+      "body_mod": {"__remove__": "__ALL_FIELDS__"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "NEG-{next}", "name": "Malformed JSON body",
+      "category": "Negative Validation", "status": 400, "priority": "P2",
+      "body_mod": {"__raw_body__": "{\"cifNo\": \"12024130\", \"accNo\": }"},
+      "header_mod": {}, "method_mod": null,
+      "accept_status": [400, 422]
+    }
+  ],
+
+  "equivalence_partitioning": [
+    {
+      "cid": "EP-001", "name": "Valid {f1} - correct format (valid partition)",
+      "category": "Equivalence Partitioning", "status": 200, "priority": "P2",
+      "body_mod": {}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "EP-002", "name": "Invalid {f1} - alphabetic chars (invalid partition)",
+      "category": "Equivalence Partitioning", "status": 400, "priority": "P2",
+      "body_mod": {"{f1}": "ABCDEFGH"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "EP-003", "name": "Invalid {f1} - mixed alphanumeric (invalid partition)",
+      "category": "Equivalence Partitioning", "status": 400, "priority": "P2",
+      "body_mod": {"{f1}": "A1B2C3D4"}, "header_mod": {}, "method_mod": null
+    }
+  ],
+
+  "boundary_value_analysis": [
+    {
+      "cid": "BVA-001", "name": "Very long string in {f1} (260 chars)",
+      "category": "Boundary Value Analysis", "status": 400, "priority": "P2",
+      "body_mod": {"{f1}": "__REPEAT_X_260__"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "BVA-002", "name": "Single character in {f1}",
+      "category": "Boundary Value Analysis", "status": 400, "priority": "P3",
+      "body_mod": {"{f1}": "1"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "BVA-003", "name": "Numeric zero in {f1}",
+      "category": "Boundary Value Analysis", "status": 400, "priority": "P3",
+      "body_mod": {"{f1}": "0"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "BVA-004", "name": "Negative numeric in {f1}",
+      "category": "Boundary Value Analysis", "status": 400, "priority": "P3",
+      "body_mod": {"{f1}": "-1"}, "header_mod": {}, "method_mod": null
+    }
+  ],
+
+  "authentication": [
+    {
+      "cid": "AUTH-001", "name": "Missing apikey header",
+      "category": "Authentication", "status": 401, "priority": "P1",
+      "body_mod": {}, "header_mod": {"apikey": null}, "method_mod": null,
+      "expected_error_key": "UNAUTHORIZED"
+    },
+    {
+      "cid": "AUTH-002", "name": "Invalid apikey value",
+      "category": "Authentication", "status": 401, "priority": "P1",
+      "body_mod": {}, "header_mod": {"apikey": "INVALID_FAKE_KEY_12345"}, "method_mod": null,
+      "expected_error_key": "UNAUTHORIZED"
+    },
+    {
+      "cid": "AUTH-003", "name": "Empty apikey value",
+      "category": "Authentication", "status": 401, "priority": "P1",
+      "body_mod": {}, "header_mod": {"apikey": ""}, "method_mod": null,
+      "expected_error_key": "UNAUTHORIZED"
+    },
+    {
+      "cid": "AUTH-004", "name": "Expired / revoked apikey",
+      "category": "Authentication", "status": 401, "priority": "P2",
+      "body_mod": {}, "header_mod": {"apikey": "EXPIRED_KEY_00000000000000000000"}, "method_mod": null,
+      "expected_error_key": "UNAUTHORIZED"
+    }
+  ],
+
+  "header_validation": [
+    {
+      "cid": "HDR-001", "name": "Missing Content-Type header",
+      "category": "Header Validation", "status": 415, "priority": "P2",
+      "body_mod": {}, "header_mod": {"Content-Type": null}, "method_mod": null
+    },
+    {
+      "cid": "HDR-002", "name": "Invalid Content-Type (text/plain)",
+      "category": "Header Validation", "status": 415, "priority": "P2",
+      "body_mod": {}, "header_mod": {"Content-Type": "text/plain"}, "method_mod": null
+    },
+    {
+      "cid": "HDR-003", "name": "Missing channel header",
+      "category": "Header Validation", "status": 400, "priority": "P2",
+      "body_mod": {}, "header_mod": {"channel": null}, "method_mod": null
+    },
+    {
+      "cid": "HDR-004", "name": "Invalid channel header value",
+      "category": "Header Validation", "status": 400, "priority": "P3",
+      "body_mod": {}, "header_mod": {"channel": "UNKNOWN_CHANNEL"}, "method_mod": null
+    },
+    {
+      "cid": "HDR-005", "name": "Missing x-trace-id header",
+      "category": "Header Validation", "status": 400, "priority": "P3",
+      "body_mod": {}, "header_mod": {"x-trace-id": null}, "method_mod": null
+    },
+    {
+      "cid": "HDR-006", "name": "Missing accept header",
+      "category": "Header Validation", "status": 200, "priority": "P3",
+      "body_mod": {}, "header_mod": {"accept": null}, "method_mod": null
+    },
+    {
+      "cid": "HDR-007", "name": "Unsupported Accept-Language value",
+      "category": "Header Validation", "status": 200, "priority": "P3",
+      "body_mod": {}, "header_mod": {"Accept-Language": "zh-CN"}, "method_mod": null
+    }
+  ],
+
+  "http_method": [
+    {
+      "cid": "MTH-001", "name": "Invalid HTTP method GET (should be POST)",
+      "category": "HTTP Method", "status": 405, "priority": "P2",
+      "body_mod": {}, "header_mod": {}, "method_mod": "GET"
+    },
+    {
+      "cid": "MTH-002", "name": "Invalid HTTP method PUT",
+      "category": "HTTP Method", "status": 405, "priority": "P2",
+      "body_mod": {}, "header_mod": {}, "method_mod": "PUT"
+    },
+    {
+      "cid": "MTH-003", "name": "Invalid HTTP method DELETE",
+      "category": "HTTP Method", "status": 405, "priority": "P2",
+      "body_mod": {}, "header_mod": {}, "method_mod": "DELETE"
+    },
+    {
+      "cid": "MTH-004", "name": "Invalid HTTP method PATCH",
+      "category": "HTTP Method", "status": 405, "priority": "P3",
+      "body_mod": {}, "header_mod": {}, "method_mod": "PATCH"
+    }
+  ],
+
+  "schema_validation": [
+    {
+      "cid": "SCH-001", "name": "Response envelope includes all standard fields",
+      "category": "Schema Validation", "status": 200, "priority": "P1",
+      "body_mod": {}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "SCH-002", "name": "Response data has all required fields",
+      "category": "Schema Validation", "status": 200, "priority": "P1",
+      "body_mod": {}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "SCH-003", "name": "Response data field types are correct",
+      "category": "Schema Validation", "status": 200, "priority": "P1",
+      "body_mod": {}, "header_mod": {}, "method_mod": null
+    }
+  ],
+
+  "error_handling": [
+    {
+      "cid": "ERR-001", "name": "Error payload structure on 400 Bad Request",
+      "category": "Error Handling", "status": 400, "priority": "P1",
+      "body_mod": {"__remove__": "{f1}"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "ERR-002", "name": "Error response has code/message/messageKey fields",
+      "category": "Error Handling", "status": 400, "priority": "P1",
+      "body_mod": {"{f1}": "INVALID_VALUE_ZZZZZ"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "ERR-003", "name": "Server error 500 response structure",
+      "category": "Error Handling", "status": 500, "priority": "P2",
+      "body_mod": {"{f1}": "\\u0000\\u0001\\u0002"}, "header_mod": {}, "method_mod": null,
+      "expected_error_key": "INTERNAL_SERVER_ERROR"
+    }
+  ],
+
+  "security": [
+    {
+      "cid": "SEC-001", "name": "XSS payload in {f1}",
+      "category": "Security", "status": 400, "priority": "P1",
+      "body_mod": {"{f1}": "<script>alert(\"xss\")</script>"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "SEC-002", "name": "SQL injection in {f1}",
+      "category": "Security", "status": 400, "priority": "P1",
+      "body_mod": {"{f1}": "' OR '1'='1'; DROP TABLE accounts; --"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "SEC-003", "name": "Null byte injection in {f1}",
+      "category": "Security", "status": 400, "priority": "P2",
+      "body_mod": {"{f1}": "12024130\\u0000admin"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "SEC-004", "name": "Path traversal in {f2}",
+      "category": "Security", "status": 400, "priority": "P2",
+      "body_mod": {"{f2}": "../../etc/passwd"}, "header_mod": {}, "method_mod": null
+    }
+  ],
+
+  "idempotency": [
+    {
+      "cid": "IDM-001", "name": "Repeat valid request - verify same response",
+      "category": "Idempotency", "status": 200, "priority": "P2",
+      "body_mod": {}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "IDM-002", "name": "Repeat request with different trace id",
+      "category": "Idempotency", "status": 200, "priority": "P3",
+      "body_mod": {}, "header_mod": {"x-trace-id": "TRACE-IDEMPOTENCY-002"}, "method_mod": null
+    }
+  ],
+
+  "edge_cases": [
+    {
+      "cid": "EDG-001", "name": "Unicode characters in {f1}",
+      "category": "Edge Cases", "status": 400, "priority": "P3",
+      "body_mod": {"{f1}": "日本語テスト"}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "EDG-002", "name": "Extra unknown fields in request body",
+      "category": "Edge Cases", "status": 200, "priority": "P3",
+      "body_mod": {"unknownField1": "test", "extraData": 999}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "EDG-003", "name": "Numeric type instead of string for {f1}",
+      "category": "Edge Cases", "status": 400, "priority": "P3",
+      "body_mod": {"{f1}": 12024130}, "header_mod": {}, "method_mod": null
+    }
+  ],
+
+  "single_cases": [
+    {
+      "cid": "HSC-001", "name": "Valid request returns HTTP 200 with standard response envelope",
+      "category": "HTTP Status Codes", "status": 200, "priority": "P1",
+      "body_mod": {}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "RAT-001", "name": "Rapid successive requests do not trigger 500 or service crash",
+      "category": "Rate Limiting", "status": 200, "priority": "P3",
+      "body_mod": {}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "DAT-001", "name": "Repeated identical requests return consistent response data",
+      "category": "Data Consistency", "status": 200, "priority": "P2",
+      "body_mod": {}, "header_mod": {}, "method_mod": null
+    },
+    {
+      "cid": "RHD-001", "name": "Response has Content-Type application/json header",
+      "category": "Response Header", "status": 200, "priority": "P2",
+      "body_mod": {}, "header_mod": {}, "method_mod": null
+    }
+  ],
+
+  "error_body_mod_heuristics": {
+    "_comment": "Pattern → body_mod mapping for auto-generating ERR cases from api_errors. Keys are regex patterns matched against error key names.",
+    "rules": [
+      {
+        "pattern": "CIF.*NOT_FOUND",
+        "field_candidates": ["cifNo", "cif"],
+        "value": "99999999",
+        "description_template": "Non-existent CIF triggers {err_key}"
+      },
+      {
+        "pattern": "CIF.*INVALID|INVALID.*CIF",
+        "field_candidates": ["cifNo", "cif"],
+        "value": "INVALID_CIF_XYZ",
+        "description_template": "Invalid CIF format triggers {err_key}"
+      },
+      {
+        "pattern": "(ACC|ACCOUNT).*(NOT_FOUND|NOT_DOUND)",
+        "field_candidates": ["accNo", "aaAccount"],
+        "value": "999999999999",
+        "description_template": "Non-existent account triggers {err_key}"
+      },
+      {
+        "pattern": "(ACC|ACCOUNT).*INVALID",
+        "field_candidates": ["accNo", "aaAccount"],
+        "value": "!@#$%^",
+        "description_template": "Invalid account format triggers {err_key}"
+      },
+      {
+        "pattern": "TIMEOUT",
+        "field_candidates": [],
+        "value": null,
+        "description_template": "Server timeout scenario for {err_key}"
+      },
+      {
+        "pattern": "FUNCTIONCODE|FUNCTION_CODE",
+        "field_candidates": [],
+        "value": null,
+        "description_template": "Invalid function code triggers {err_key}"
+      },
+      {
+        "pattern": "BACKEND|ERROR_IN",
+        "field_candidates": ["{f1}"],
+        "value": "__REPEAT_DEL_50__",
+        "description_template": "Backend error triggered by corrupt data ({err_key})"
+      }
+    ],
+    "fallback": {
+      "description_template": "Trigger {err_key} with invalid value",
+      "use_remove_mandatory": true,
+      "fallback_value_prefix": "TRIGGER_ERROR_"
+    }
+  },
+
+  "_comment_soap_extra": "xml_validation and backend_failure are SOAP-only — skipped for REST APIs",
+
+  "xml_validation": [
+    {
+      "cid": "XMLV-001",
+      "name": "Malformed SOAP XML: truncated body (missing closing tags)",
+      "category": "XML Validation",
+      "status": 400,
+      "priority": "P2",
+      "body_mod": {"__raw_body__": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body>"},
+      "header_mod": {},
+      "method_mod": null
+    },
+    {
+      "cid": "XMLV-002",
+      "name": "Non-XML body sent to SOAP endpoint (plain JSON payload)",
+      "category": "XML Validation",
+      "status": 400,
+      "priority": "P2",
+      "body_mod": {"__raw_body__": "{\"invalid\": \"json body for soap endpoint\"}"},
+      "header_mod": {},
+      "method_mod": null
+    },
+    {
+      "cid": "XMLV-003",
+      "name": "SOAP envelope missing required namespace declarations",
+      "category": "XML Validation",
+      "status": 400,
+      "priority": "P3",
+      "body_mod": {"__raw_body__": "<Envelope><Body><Request/></Body></Envelope>"},
+      "header_mod": {},
+      "method_mod": null
+    }
+  ],
+
+  "backend_failure": [
+    {
+      "cid": "BKF-001",
+      "name": "Invalid T24 password in WebRequestCommon → backend auth failure",
+      "category": "Backend Failure",
+      "status": 200,
+      "priority": "P2",
+      "body_mod": {"password": "INVALID_PASSWORD_XYZ"},
+      "header_mod": {},
+      "method_mod": null
+    },
+    {
+      "cid": "BKF-002",
+      "name": "Invalid T24 company code in WebRequestCommon → company not found",
+      "category": "Backend Failure",
+      "status": 200,
+      "priority": "P2",
+      "body_mod": {"company": "INVALID_CO_999"},
+      "header_mod": {},
+      "method_mod": null
+    },
+    {
+      "cid": "BKF-003",
+      "name": "Non-existent T24 username in WebRequestCommon → auth failure",
+      "category": "Backend Failure",
+      "status": 200,
+      "priority": "P3",
+      "body_mod": {"userName": "INVALID.USER.NOTEXIST"},
+      "header_mod": {},
+      "method_mod": null
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "_comment": "Multi-scenario SOAP APIs: one doc file → multiple test suites. Keys are base slugs from doc. Each scenario gets its own virtual slug, matched to a specific sampler request name.",
+
+  "GetEarlyFeeDeatils": {
+    "_doc": "5_Early_payment_fee.docx",
+    "scenarios": {
+      "GetEarlyFeeDeatils_EarlyMaturity": {
+        "sampler_request_name": "GetFeeDetailsEarlyMaturity",
+        "scenario_label": "Early Maturity",
+        "fixed_fields": {
+          "LD.TYPE": "EARLY.MATURITY"
+        },
+        "mandatory_fields": ["LD.ID", "LD.TYPE", "FIN.MAT.DATE"],
+        "optional_fields": ["CUSTOMER.ID"],
+        "exclude_fields": ["ONLINE.RPY.AMT", "ONLINE.RPY.TYPE", "ONLINE.EFF.DATE", "AMOUNT.INCREASE", "AMT.V.DATE"],
+        "scenario_errors": [
+          "ENTER_VALID_LOAN_ID",
+          "INVALID_LOAN_ID_FOR_THIS_CIF",
+          "ENTER_VALID_MATURITY_DATE",
+          "ENTER_VALID_LOAN_TYPE"
+        ]
+      },
+      "GetEarlyFeeDeatils_OnlineRepayment": {
+        "sampler_request_name": "GetFeeDetailsOnlineRepayment",
+        "scenario_label": "Online Repayment",
+        "fixed_fields": {
+          "LD.TYPE": "ONLINE.REPAYMENT"
+        },
+        "mandatory_fields": ["LD.ID", "LD.TYPE", "ONLINE.RPY.AMT", "ONLINE.RPY.TYPE", "ONLINE.EFF.DATE"],
+        "optional_fields": ["CUSTOMER.ID"],
+        "exclude_fields": ["FIN.MAT.DATE", "AMOUNT.INCREASE", "AMT.V.DATE"],
+        "scenario_errors": [
+          "ENTER_VALID_LOAN_ID",
+          "INVALID_LOAN_ID_FOR_THIS_CIF",
+          "ENTER_VALID_ONLINE_EFF_DATE",
+          "ENTER_VALID_LOAN_TYPE"
+        ]
+      },
+      "GetEarlyFeeDeatils_Amendment": {
+        "sampler_request_name": "GetFeeDetailsAmend",
+        "scenario_label": "Amendment",
+        "fixed_fields": {
+          "LD.TYPE": "AMENDMENT"
+        },
+        "mandatory_fields": ["LD.ID", "LD.TYPE", "AMOUNT.INCREASE", "AMT.V.DATE"],
+        "optional_fields": ["CUSTOMER.ID"],
+        "exclude_fields": ["ONLINE.RPY.AMT", "ONLINE.RPY.TYPE", "ONLINE.EFF.DATE", "FIN.MAT.DATE"],
+        "scenario_errors": [
+          "ENTER_VALID_LOAN_ID",
+          "INVALID_LOAN_ID_FOR_THIS_CIF",
+          "ENTER_VALID_AMT_VALUE_OR_ONLINE_EFF_DATE",
+          "ENTER_VALID_LOAN_TYPE"
+        ]
+      }
+    }
+  },
+
+  "UpdateLoanInterestDetails": {
+    "_doc": "7_ChangeTheInterestRate_Spread.docx",
+    "scenarios": {
+      "UpdateLoanInterestDetails_InterestRate": {
+        "sampler_request_name": "UpdateNewInterestRate",
+        "scenario_label": "Change Interest Rate",
+        "fixed_fields": {},
+        "mandatory_fields": ["id", "APP.REF", "NEW.INT.RATE", "INT.RATE.V.DATE"],
+        "optional_fields": [],
+        "exclude_fields": ["NEW.SPREAD", "SPREAD.V.DATE"],
+        "scenario_errors": [
+          "UPDATES_ARE_NOT_ALLOWED_WHEN_THE_REPAYMENT_BATCH_JOB_IS_IN_PROGRESS",
+          "UPDATING_SAME_INTEREST_RATE_IS_RESTRICTED",
+          "INPUT_MISSING",
+          "INVALID_CONTRACT_NUMBER"
+        ]
+      },
+      "UpdateLoanInterestDetails_Spread": {
+        "sampler_request_name": "UpdateNewSpread",
+        "scenario_label": "Change Spread",
+        "fixed_fields": {},
+        "mandatory_fields": ["id", "APP.REF", "NEW.SPREAD", "SPREAD.V.DATE"],
+        "optional_fields": [],
+        "exclude_fields": ["NEW.INT.RATE", "INT.RATE.V.DATE"],
+        "scenario_errors": [
+          "UPDATES_ARE_NOT_ALLOWED_WHEN_THE_REPAYMENT_BATCH_JOB_IS_IN_PROGRESS",
+          "UPDATING_SAME_SPREAD_VALUE_IS_RESTRICTED",
+          "INPUT_MISSING",
+          "INVALID_CONTRACT_NUMBER"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "_comment": "Coverage categories, prompt requirements, extra categories",
+
+  "categories": [
+    "Positive",
+    "Negative Validation",
+    "Boundary Value Analysis",
+    "Equivalence Partitioning",
+    "Authentication",
+    "Business Rules",
+    "HTTP Status Codes",
+    "Schema Validation",
+    "Header Validation",
+    "Rate Limiting",
+    "Error Handling",
+    "Security",
+    "Data Consistency",
+    "Idempotency",
+    "Edge Cases",
+    "HTTP Method",
+    "Response Header",
+    "XML Validation",
+    "Backend Failure"
+  ],
+
+  "prompt_requirements": [
+    {"num": 1,  "label": "Positive scenarios",              "category_key": "Positive",                "description": "Luồng thành công"},
+    {"num": 2,  "label": "Negative scenarios",              "category_key": "Negative Validation",     "description": "Field sai, thiếu, sai kiểu"},
+    {"num": 3,  "label": "Boundary Value Analysis (BVA)",   "category_key": "Boundary Value Analysis", "description": "Min/max/boundary length"},
+    {"num": 4,  "label": "Equivalence Partitioning (EP)",   "category_key": "Equivalence Partitioning","description": "Nhóm giá trị tương đương"},
+    {"num": 5,  "label": "Authentication & Authorization",  "category_key": "Authentication",          "description": "Token hết hạn, sai, thiếu"},
+    {"num": 6,  "label": "Business Rules validation",       "category_key": "Business Rules",          "description": "Quy tắc nghiệp vụ đặc thù"},
+    {"num": 7,  "label": "HTTP Status Codes validation",    "category_key": "__http_status_codes__",   "description": "Distinct HTTP codes covered"},
+    {"num": 8,  "label": "Schema validation",               "category_key": "Schema Validation",       "description": "Response structure, field types"},
+    {"num": 9,  "label": "Header validation",               "category_key": "Header Validation",       "description": "apikey, Content-Type, Channel..."},
+    {"num": 10, "label": "Rate limiting / throttling",      "category_key": "Rate Limiting",           "description": "Rapid request smoke test"},
+    {"num": 11, "label": "Error handling (4xx, 5xx)",       "category_key": "Error Handling",          "description": "Error code + message validation"},
+    {"num": 12, "label": "Security smoke tests",            "category_key": "Security",                "description": "SQL injection, XSS, tampered token"},
+    {"num": 13, "label": "Data consistency checks",         "category_key": "Data Consistency",        "description": "Repeated calls return same data"},
+    {"num": 14, "label": "Idempotency",                     "category_key": "Idempotency",             "description": "Duplicate request behaviour"},
+    {"num": 15, "label": "Edge / corner cases",             "category_key": "Edge Cases",              "description": "Null, empty, special chars, wrong type"}
+  ],
+
+  "extra_categories": [
+    {"label": "HTTP Method",     "category_key": "HTTP Method",     "description": "Wrong-method rejection (GET/PUT/DELETE → 405)"},
+    {"label": "Response Header", "category_key": "Response Header", "description": "Content-Type trong response"},
+    {"label": "XML Validation",  "category_key": "XML Validation",  "description": "SOAP-only: malformed XML, wrong namespace, non-XML body"},
+    {"label": "Backend Failure", "category_key": "Backend Failure", "description": "SOAP-only: invalid T24 credentials / company code → backend error"}
+  ]
+}
